@@ -134,11 +134,8 @@ class CDN77ContentServer(ContentServer):
         self.password = password
         self.api_login = api_login
         self.api_password = api_password
-        self.apiv3_token = apiv3_token
         self.cdn_id = cdn_id
         self.cdn_id_bigfiles = cdn_id_bigfiles
-        self.cdnv3_id = cdnv3_id
-        self.cdnv3_id_bigfiles = cdnv3_id_bigfiles
         # Set to True if the files are served through a different archive
         self.remote_archive = True
         self.purge_queue = 'cdn77-purge'
