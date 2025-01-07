@@ -105,6 +105,7 @@ class ImageComparison( ArchiveModel, TranslationModel ):
         newsfeature = ImageResourceManager( derived='original', type=types.NewsFeatureType )
         medium = ImageResourceManager( derived='original', type=types.MediumJpegType )
         wallpaperthumbs = ImageResourceManager( derived='original', type=types.WallpaperThumbnailType )
+        wallpaper1 = ImageResourceManager(derived='original', type=types.Wallpaper1Type)
         potwmedium = ImageResourceManager( derived='original', type=types.POTWMediumThumbnailJpegType )
         thumbs = ImageResourceManager( derived='original', type=types.ThumbnailJpegType )
         thumb350x = ImageResourceManager( derived='original', type=types.Thumb350xType )
@@ -125,6 +126,7 @@ class ImageComparison( ArchiveModel, TranslationModel ):
             rename_fks = (
                 ( 'media_imagecomparison', 'source_id' ),
                 ( 'media_image', 'release_date_owner' ),
+                ( 'releases_releaseimagecomparison', 'archive_item_id' )
             )
             sort_fields = ['last_modified', 'release_date', ]
             clean_html_fields = ['description', 'credit']

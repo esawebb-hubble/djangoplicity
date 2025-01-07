@@ -98,7 +98,6 @@ class MultiFileField(forms.FileField):
 class WTMLForm(forms.Form):
     files = MultiFileField(min_num=1, max_num=40, maximum_file_size=100 * 1024)  # 100KB
 
-
 class WTMLMetadataImport(FormView):
     form_class = WTMLForm
     template_name = 'admin/metadata/wtml_metadata_import.html'

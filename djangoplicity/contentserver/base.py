@@ -28,6 +28,8 @@
 # IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE
+
+
 import json
 import logging
 import os
@@ -132,8 +134,11 @@ class CDN77ContentServer(ContentServer):
         self.password = password
         self.api_login = api_login
         self.api_password = api_password
+        self.apiv3_token = apiv3_token
         self.cdn_id = cdn_id
         self.cdn_id_bigfiles = cdn_id_bigfiles
+        self.cdnv3_id = cdnv3_id
+        self.cdnv3_id_bigfiles = cdnv3_id_bigfiles
         # Set to True if the files are served through a different archive
         self.remote_archive = True
         self.purge_queue = 'cdn77-purge'
@@ -176,9 +181,8 @@ class CDN77ContentServer(ContentServer):
 
         if result is None:
             raise Exception('Failed API call: "%s"' % method)
-        
-        logger.info('Started %s for %s on %s, request: %s',
-                    method, self.name, self.cdn_id, result['id'])
+
+        logger.info('Started %s for %s on %s", request: %s', method, self.name, self.cdn_id, result['id'])
 
         return result
 
@@ -217,8 +221,7 @@ class CDN77ContentServer(ContentServer):
         urls_bigfiles = []
         for fmt in formats:
             # Get the local resource (if any)
-            resource = getattr(instance, '%s%s' %
-                               (instance.Archive.Meta.resource_fields_prefix, fmt), None)
+            resource = getattr(instance, '%s%s' % (instance.Archive.Meta.resource_fields_prefix, fmt), None)
 
             if not resource:
                 continue
@@ -431,8 +434,7 @@ class CDN77ContentServer(ContentServer):
                             # Upload the file
                             s3.upload_file(local_path, self.aws_storage_bucket_name, s3_key, ExtraArgs)
 
-                    logger.info('Uploaded directory %s to %s:%s', resource.name, self.aws_s3_endpoint_url,
-                                remote_path)
+                    logger.info('Uploaded directory %s to %s:%s', resource.name, self.aws_s3_endpoint_url, remote_path)
                 else:
                     """Upload a file to an S3 bucket
                     :param file_name: File to upload
