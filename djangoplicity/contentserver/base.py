@@ -46,6 +46,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from djangoplicity.contentserver.cdn77_tasks import purge_prefetch
 from mimetypes import MimeTypes
 
+
 logger = logging.getLogger(__name__)
 
 __all__ = ('ContentServer', 'CDN77ContentServer')
@@ -121,14 +122,12 @@ class CDN77ContentServer(ContentServer):
     '''
 
     def __init__(self, name, formats=None, url='', url_bigfiles='', remote_dir='', host='', username='', password='',
-                 api_login='', api_password='', apiv3_token='', cdn_id='', cdn_id_bigfiles='', cdnv3_id='',
-                 cdnv3_id_bigfiles='', aws_access_key_id='',
+                 api_login='', api_password='', cdn_id='', cdn_id_bigfiles='', aws_access_key_id='',
                  aws_secret_access_key='', aws_storage_bucket_name='', aws_s3_region_name='',
                  aws_s3_endpoint_url='', aws_s3_custom_domain=''):
         super(CDN77ContentServer, self).__init__(name, formats, url, remote_dir)
         self.url_bigfiles = url_bigfiles
-        self.api_url = 'https://api.cdn77.com/v2.0/'
-        self.apiv3_url = 'https://api.cdn77.com/v3/'
+        self.api_url = 'https://api.cdn77.com/v3/'
         self.bigfiles_limit = 2147483648  # Files larger than 2GB are served by url_bigfiles
         self.host = host
         self.username = username
@@ -164,11 +163,11 @@ class CDN77ContentServer(ContentServer):
             }
         '''
         headers = {
-            'Authorization': 'Bearer {}'.format(self.apiv3_token)
+            'Authorization': 'Bearer {}'.format(self.api_password)
         }
         r = requests.post(
             #  self.api_url + method,
-            self.apiv3_url + method,
+            self.api_url + method,
             data=json.dumps(params),
             headers=headers
         )
@@ -308,7 +307,7 @@ class CDN77ContentServer(ContentServer):
                 break
 
             logger.debug('Fetched message %d, left: %d',
-                method_frame.delivery_tag, method_frame.message_count)
+                         method_frame.delivery_tag, method_frame.message_count)
 
             channel.basic_ack(method_frame.delivery_tag)
             message = json.loads(message)
@@ -332,7 +331,7 @@ class CDN77ContentServer(ContentServer):
             for urls_chunk in chunks(urls, 1800):
                 logger.info('%s %d URLs', action, len(urls_chunk))
                 params['paths'] = urls_chunk
-                method = 'cdn/{}/job/{}'.format(self.cdnv3_id, action)
+                method = 'cdn/{}/job/{}'.format(self.cdn_id, action)
                 self._api(method, params)
 
         # If necessary also purge/prefetch the large files onto the secondary CDN
@@ -343,7 +342,7 @@ class CDN77ContentServer(ContentServer):
             for urls_chunk in chunks(urls_bigfiles, 1800):
                 logger.info('%s %d URLs', action, len(urls_chunk))
                 params['paths'] = urls_chunk
-                method = 'cdn/{}/job/{}'.format(self.cdnv3_id_bigfiles, action)
+                method = 'cdn/{}/job/{}'.format(self.cdn_id_bigfiles, action)
                 self._api(method, params)
 
     def sync_resources(self, instance, formats=None, delay=False, prefetch=True, purge=True):
@@ -428,13 +427,14 @@ class CDN77ContentServer(ContentServer):
                             # Get mimetype of object
                             local_path = os.path.join(root, file)
                             mime_type = MimeTypes().guess_type(local_path)
+                            ExtraArgs = {}
+                            if mime_type:
+                                ExtraArgs.update({'ContentType': mime_type[0]})
                             s3_key = os.path.join(remote_path, os.path.relpath(local_path, resource.path))
                             # Upload the file
-                            s3.upload_file(local_path, self.aws_storage_bucket_name, s3_key,
-                                           ExtraArgs={'ContentType': mime_type[0]})
+                            s3.upload_file(local_path, self.aws_storage_bucket_name, s3_key, ExtraArgs)
 
-                    logger.info('Uploaded directory %s to %s:%s', resource.name, self.aws_s3_endpoint_url,
-                                remote_path)
+                    logger.info('Uploaded directory %s to %s:%s', resource.name, self.aws_s3_endpoint_url, remote_path)
                 else:
                     """Upload a file to an S3 bucket
                     :param file_name: File to upload
@@ -447,8 +447,10 @@ class CDN77ContentServer(ContentServer):
                     try:
                         # Get mimetype of object
                         mime_type = MimeTypes().guess_type(resource.path)
-                        s3.upload_file(resource.path, self.aws_storage_bucket_name, remote_path,
-                                       ExtraArgs={'ContentType': mime_type[0]})
+                        ExtraArgs = {}
+                        if mime_type[0]:
+                            ExtraArgs.update({'ContentType': mime_type[0]})
+                        s3.upload_file(resource.path, self.aws_storage_bucket_name, remote_path, ExtraArgs)
                         logger.info('Uploaded %s to %s', resource.path, remote_path)
                     except Exception as e:
                         logger.error(Exception)

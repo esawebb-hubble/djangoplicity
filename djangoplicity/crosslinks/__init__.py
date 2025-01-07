@@ -6,62 +6,62 @@ _ = lambda x: x
 
 ARCHIVE_CROSSLINKS = {
     'announcements': (
-        ('esahubble.org', 'https://esahubble.org/announcements/'),
+        ('esawebb.org', 'https://esawebb.org/announcements/'),
     ),
     'releases': (
-        ('esahubble.org', 'https://esahubble.org/news/'),
+        ('esawebb.org', 'https://esawebb.org/news/'),
     ),
     'images': (
-        ('esahubble.org', 'https://esahubble.org/images/'),
+        ('esawebb.org', 'https://esawebb.org/images/'),
     ),
     'videos': (
-        ('esahubble.org', 'https://esahubble.org/videos/'),
+        ('esawebb.org', 'https://esawebb.org/videos/'),
     ),
     'potw': (
-        ('esahubble.org', 'https://esahubble.org/images/potw/'),
+        ('esawebb.org', 'https://esawebb.org/images/potm/'),
     ),
     'posters': (
-        ('esahubble.org', 'https://esahubble.org/products/print_posters/'),
+        ('esawebb.org', 'https://esawebb.org/products/print_posters/'),
     ),
     'books': (
-        ('esahubble.org', 'https://esahubble.org/about/further_information/books/'),
+        ('esawebb.org', 'https://esawebb.org/about/further_information/books/'),
     ),
     'brochures': (
-        ('esahubble.org', 'https://esahubble.org/about/further_information/brochures/'),
+        ('esawebb.org', 'https://esawebb.org/about/further_information/brochures/'),
     ),
     'calendars': (
-        ('esahubble.org', 'https://esahubble.org/products/calendars/'),
+        ('esawebb.org', 'https://esawebb.org/products/calendars/'),
     ),
     'education': (
-        ('esahubble.org', 'https://esahubble.org/projects/anniversary/educational_material/'),
+        #('esawebb.org', 'https://esawebb.org/projects/anniversary/educational_material/'),
     ),
     'newsletters': (
-        ('esahubble.org', 'https://esahubble.org/newsletters/'),
+        ('esawebb.org', 'https://esawebb.org/newsletters/'),
 
     ),
     'periodicals': (
-        # ( 'esahubble.org', 'https://esahubble.org/about/further_information/newsletters/' )#brokend
+        # ( 'esawebb.org', 'https://esawebb.org/about/further_information/newsletters/' )#brokend
     ),
     'postcards': (
-        ('esahubble.org', 'https://esahubble.org/products/postcards/'),
+        ('esawebb.org', 'https://esawebb.org/products/postcards/'),
     ),
     'logos': (
-        ('esahubble.org', 'https://esahubble.org/products/logos/'),
+        ('esawebb.org', 'https://esawebb.org/products/logos/'),
     ),
     'conferenceposters': (
-        ('esahubble.org', 'https://esahubble.org/products/conf_posters/'),
+        ('esawebb.org', 'https://esawebb.org/products/conf_posters/'),
     ),
     'presentations': (
-        ('esahubble.org', 'https://esahubble.org/products/presentations/'),
+        ('esawebb.org', 'https://esawebb.org/products/presentations/'),
     ),
     'exhibitions': (
-        ('esahubble.org', 'https://esahubble.org/products/exhibitions/'),
+        ('esawebb.org', 'https://esawebb.org/products/exhibitions/'),
     ),
     'dvds': (
-        ('esahubble.org', 'https://esahubble.org/products/media/'),
+        ('esawebb.org', 'https://esawebb.org/products/media/'),
     ),
     'techdocs': (
-        # ( 'esahubble.org', 'http://www.esahubble.org/about/further_information/techdocs/' )#roto
+        # ( 'esawebb.org', 'http://www.esawebb.org/about/further_information/techdocs/' )#roto
     ),
 
 }
