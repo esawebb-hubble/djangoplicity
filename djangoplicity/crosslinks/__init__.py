@@ -1,67 +1,71 @@
 """
 Simple module for defining cross-links between archives on ESO-hosted djangoplicity sites.
 """
+from django.conf import settings
+
+url = settings.SITE_DOMAIN
+domain = url.split(".", 1)[1] if url.startswith("www.") else url
 
 _ = lambda x: x
 
 ARCHIVE_CROSSLINKS = {
     'announcements': (
-        ('esawebb.org', 'https://esawebb.org/announcements/'),
+        (domain, f'https://{domain}/announcements/'),
     ),
     'releases': (
-        ('esawebb.org', 'https://esawebb.org/news/'),
+        (domain, f'https://{domain}/news/'),
     ),
     'images': (
-        ('esawebb.org', 'https://esawebb.org/images/'),
+        (domain, f'https://{domain}/images/'),
     ),
     'videos': (
-        ('esawebb.org', 'https://esawebb.org/videos/'),
+        (domain, f'https://{domain}/videos/'),
     ),
     'potw': (
-        ('esawebb.org', 'https://esawebb.org/images/potm/'),
+        (domain, f'https://{domain}/images/potm/'),
     ),
     'posters': (
-        ('esawebb.org', 'https://esawebb.org/products/print_posters/'),
+        (domain, f'https://{domain}/products/print_posters/'),
     ),
     'books': (
-        ('esawebb.org', 'https://esawebb.org/about/further_information/books/'),
+        (domain, f'https://{domain}/about/further_information/books/'),
     ),
     'brochures': (
-        ('esawebb.org', 'https://esawebb.org/about/further_information/brochures/'),
+        (domain, f'https://{domain}/about/further_information/brochures/'),
     ),
     'calendars': (
-        ('esawebb.org', 'https://esawebb.org/products/calendars/'),
+        (domain, f'https://{domain}/products/calendars/'),
     ),
     'education': (
-        #('esawebb.org', 'https://esawebb.org/projects/anniversary/educational_material/'),
+        #(domain, f'https://{domain}/projects/anniversary/educational_material/'),
     ),
     'newsletters': (
-        ('esawebb.org', 'https://esawebb.org/newsletters/'),
+        (domain, f'https://{domain}/newsletters/'),
 
     ),
     'periodicals': (
-        # ( 'esawebb.org', 'https://esawebb.org/about/further_information/newsletters/' )#brokend
+        # ( domain, f'https://{domain}/about/further_information/newsletters/' )#brokend
     ),
     'postcards': (
-        ('esawebb.org', 'https://esawebb.org/products/postcards/'),
+        (domain, f'https://{domain}/products/postcards/'),
     ),
     'logos': (
-        ('esawebb.org', 'https://esawebb.org/products/logos/'),
+        (domain, f'https://{domain}/products/logos/'),
     ),
     'conferenceposters': (
-        ('esawebb.org', 'https://esawebb.org/products/conf_posters/'),
+        (domain, f'https://{domain}/products/conf_posters/'),
     ),
     'presentations': (
-        ('esawebb.org', 'https://esawebb.org/products/presentations/'),
+        (domain, f'https://{domain}/products/presentations/'),
     ),
     'exhibitions': (
-        ('esawebb.org', 'https://esawebb.org/products/exhibitions/'),
+        (domain, f'https://{domain}/products/exhibitions/'),
     ),
     'dvds': (
-        ('esawebb.org', 'https://esawebb.org/products/media/'),
+        (domain, f'https://{domain}/products/media/'),
     ),
     'techdocs': (
-        # ( 'esawebb.org', 'http://www.esawebb.org/about/further_information/techdocs/' )#roto
+        # ( domain, 'http://{domain}/about/further_information/techdocs/' )#roto
     ),
 
 }
