@@ -19,6 +19,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.utils.encoding import smart_text, smart_str
 from django.utils.translation import ugettext_lazy as _, ugettext_noop
+from django.utils.text import get_valid_filename
 
 from djangoplicity.media.consts import MEDIA_CONTENT_SERVERS
 from djangoplicity.translation.models import TranslationModel
@@ -141,7 +142,8 @@ class ResourceFile( File ):
     open.alters_data = True
 
     def save(self, name, content):
-        self._name = self.storage.save(name, content)
+        clean_name = get_valid_filename(os.path.basename(name))
+        self._name = self.storage.save(clean_name, content)
         # Update the filesize cache
         self._size = len(content)
     save.alters_data = True
