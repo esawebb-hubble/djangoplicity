@@ -31,19 +31,21 @@
 
 from builtins import object
 from django.utils.translation import ugettext_noop
-from djangoplicity.archives.contrib.browsers import ListBrowser, \
-    SerializationBrowser
-from djangoplicity.archives.contrib.queries import EmbargoQuery, \
-    StagingQuery, YearQuery
-from djangoplicity.archives.contrib.serialization.serializers import JSONEmitter, \
-    ICalEmitter
+from django.conf import settings
+from djangoplicity.archives.contrib.browsers import ListBrowser, SerializationBrowser
+from djangoplicity.archives.contrib.queries import EmbargoQuery, StagingQuery, YearQuery
+from djangoplicity.archives.contrib.serialization.serializers import JSONEmitter, ICalEmitter
 from djangoplicity.archives.contrib.templater import DisplayTemplate
 from djangoplicity.archives.options import ArchiveOptions
 from djangoplicity.archives.views import SerializationDetailView
 from djangoplicity.media.queries import PotwAllPublicQuery
-from djangoplicity.media.serializers import PictureOfTheWeekSerializer, \
-    ICalPictureOfTheWeekSerializer
+from djangoplicity.media.serializers import PictureOfTheWeekSerializer, ICalPictureOfTheWeekSerializer
 
+def get_potw_or_potm_text():
+    """Return 'Picture of the Week' or 'Picture of the Month' based on SITE_DOMAIN."""
+    if settings.SITE_DOMAIN == "www.esahubble.org":
+        return "Picture of the Week"
+    return "Picture of the Month"
 
 class PictureOfTheWeekOptions( ArchiveOptions ):
     urlname_prefix = "potw"
@@ -58,10 +60,10 @@ class PictureOfTheWeekOptions( ArchiveOptions ):
     )
 
     class Queries( object ):
-        default = PotwAllPublicQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=ugettext_noop("Picture of the Month"), feed_name="default" )
-        embargo = EmbargoQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=ugettext_noop("Picture of the Month (embargoed)") )
-        staging = StagingQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=ugettext_noop("Picture of the Month (staging)") )
-        year = YearQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=ugettext_noop("Picture of the Month %d"), feed_name="default" )
+        default = PotwAllPublicQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=ugettext_noop(get_potw_or_potm_text()), feed_name="default" )
+        embargo = EmbargoQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=f"{get_potw_or_potm_text()} (embargoed)")
+        staging = StagingQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=f"{get_potw_or_potm_text()} (staging)" )
+        year = YearQuery( browsers=( 'normal', 'viewall', 'json', 'ical' ), verbose_name=f"{get_potw_or_potm_text()} %d", feed_name="default" )
 
     class Browsers( object ):
         normal = ListBrowser( paginate_by=20 )
@@ -70,9 +72,9 @@ class PictureOfTheWeekOptions( ArchiveOptions ):
         ical = SerializationBrowser( serializer=ICalPictureOfTheWeekSerializer, emitter=ICalEmitter, paginate_by=100, display=False, verbose_name=ugettext_noop( "iCal" ) )
 
     class Display( object ):
-        multiple_potw = DisplayTemplate( 'template', '{%block org_prefix %}ESO{% endblock %} Picture of the Month: {{obj.image.title}}<br/><a href="{{site_url_prefix}}{{obj.get_absolute_url}}">{{site_url_prefix}}{{obj.get_absolute_url}}</a>', name='Multiple POTW list' )
-        multiple_potw_text = DisplayTemplate( 'template', '{%block org_prefix %}ESO{% endblock %} Picture of the Month: {{obj.image.title}}<br/>{{site_url_prefix}}{{obj.get_absolute_url}}', name='Multiple POTW list (plaintext)' )
-        potw_available_announcement = DisplayTemplate( 'file', 'archives/pictureoftheweek/email/translations_available_potw.html', name='Picture of the Month available for translation' )
+        multiple_potw = DisplayTemplate( 'template', f"{{%block org_prefix %}}ESO{{% endblock %}} {get_potw_or_potm_text()}: {{obj.image.title}}<br/><a href=\"{{site_url_prefix}}{{obj.get_absolute_url}}\">{{site_url_prefix}}{{obj.get_absolute_url}}</a>", name='Multiple POTW list' )
+        multiple_potw_text = DisplayTemplate( 'template', f"{{%block org_prefix %}}ESO{{% endblock %}} {get_potw_or_potm_text()}: {{obj.image.title}}<br/>{{site_url_prefix}}{{obj.get_absolute_url}}", name='Multiple POTW list (plaintext)' )
+        potw_available_announcement = DisplayTemplate( 'file', 'archives/pictureoftheweek/email/translations_available_potw.html', name=f"{get_potw_or_potm_text()} available for translation" )
 
     @staticmethod
     def feeds():
