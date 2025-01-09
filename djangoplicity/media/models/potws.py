@@ -44,8 +44,7 @@ from djangoplicity.archives.utils import propagate_release_date, release_date_ch
 from djangoplicity.media.models.comparisons import ImageComparison, ImageComparisonProxy
 from djangoplicity.media.models.images import Image, ImageProxy
 from djangoplicity.media.models.videos import Video, VideoProxy
-from djangoplicity.translation.models import TranslationForeignKey, \
-    TranslationModel
+from djangoplicity.translation.models import TranslationForeignKey,TranslationModel
 
 # Picture of the Week translations
 # ================================
@@ -95,11 +94,17 @@ class PictureOfTheWeek( ArchiveModel, TranslationModel ):
         '''
         Extend Archive's rename() to send email notification if original is renamed
         '''
+        pot_name = 'Pictures of the Month'
+        pot_tag = 'POTM_RENAME_NOTIFY'
+        if settings.SITE_DOMAIN == 'www.esahubble.org':
+            pot_name = 'Pictures of the Week'
+            pot_tag = 'POTW_RENAME_NOTIFY'
+
         if self.published and self.is_source() and hasattr(settings, 'RELEASE_RENAME_NOTIFY'):
-            msg_subject = 'Picture of the Week renamed: %s -> %s' % ( self.pk, new_pk )
+            msg_subject = '%s renamed: %s -> %s' % (pot_name, self.pk, new_pk )
             msg_body = """https://www.eso.org/public/images/%s/""" % new_pk
             msg_from = getattr(settings, 'DEFAULT_FROM_EMAIL', '')
-            msg_to = getattr(settings, 'POTW_RENAME_NOTIFY', '')
+            msg_to = getattr(settings, pot_tag, '')
             if msg_from and msg_to:
                 send_mail( msg_subject, msg_body, msg_from, msg_to, fail_silently=False )
 
@@ -179,6 +184,8 @@ class PictureOfTheWeek( ArchiveModel, TranslationModel ):
     class Meta:
         ordering = ('-release_date', )
         verbose_name_plural = _('Pictures of the Month')
+        if settings.SITE_DOMAIN == 'www.esahubble.org':
+            verbose_name_plural = _('Pictures of the Week')
         app_label = 'media'
         permissions = [
             ( "view_only_non_default", "Can view only non default language" ),
@@ -228,7 +235,9 @@ class PictureOfTheWeekProxy( PictureOfTheWeek, TranslationProxyMixin ):
 
     class Meta:
         proxy = True
-        verbose_name = _('Picture of the Week translation')
+        verbose_name = _('Pictures of the Month translation')
+        if settings.SITE_DOMAIN == 'www.esahubble.org':
+            verbose_name = _('Pictures of the Week translation')
         app_label = 'media'
 
     class Archive:
