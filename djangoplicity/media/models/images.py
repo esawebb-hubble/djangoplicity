@@ -82,6 +82,7 @@ else:
     from django.core.urlresolvers import reverse
 from djangoplicity.archives.importer.utils import rerun_import_actions
 from djangoplicity.archives.loading import get_archive_modeloptions
+from libavm.utils import avm_from_file
 
 # #########################################################################
 # Colour
@@ -783,7 +784,11 @@ class Image( ArchiveModel, TranslationModel, ContentDeliveryModel, CropModel ):
             if m:
                 return self.get_PASSTHROUGH_image_token( m.group(1) )
         raise AttributeError
-
+    
+    def contains_coordinate_metadata(self):
+        avm_data = avm_from_file(self.resource_screen.url)
+        return bool(avm_data.get("Spatial.ReferenceValue") and avm_data.get("Spatial.Rotation"))
+        
     # ========================================================================
     # Classes
     # ========================================================================
