@@ -786,7 +786,7 @@ class Image( ArchiveModel, TranslationModel, ContentDeliveryModel, CropModel ):
         raise AttributeError
     
     def contains_coordinate_metadata(self):
-        avm_data = avm_from_file(self.resource_screen.url)
+        avm_data = avm_from_file(self.resource_screen.path)
         return bool(avm_data.get("Spatial.ReferenceValue") and avm_data.get("Spatial.Rotation"))
         
     # ========================================================================
