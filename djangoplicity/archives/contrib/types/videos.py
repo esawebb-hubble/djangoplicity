@@ -173,12 +173,12 @@ class UltraHDType(FileType):
     exts = ['mp4']
     width = 3840
     height = 2160
-
+    bitrate = 30000
 
 class FullHDPreview1080p(MP4Type):
     width = 1920
     height = 1080
-
+    bitrate = 30000
 
 class UltraHDH265Type(FileType):
     verbose_name = ugettext_noop(u'Ultra HD (4k/2160p)')
@@ -203,3 +203,47 @@ class SubtitleType (FileType):
 class AudioTrackType (FileType):
     verbose_name = ugettext_noop(u'Audio Track')
     exts = ['zip', 'wav']
+
+class QHDPreviewType(VideoType):
+    name = "qhd_1440p25_screen"
+    label = "2.5K QHD Preview"
+    extension = "mp4"
+    mime_type = "video/mp4"
+    codec = "MPEG4 H.264"
+    width = 2560
+    height = 1440
+    frame_rate = 25
+    bitrate = 14000
+
+class K8PreviewType(VideoType):
+    name = "8k_4320p25_screen"
+    label = "8K Preview"
+    extension = "mp4"
+    mime_type = "video/mp4"
+    codec = "MPEG4 H.264"
+    width = 7680
+    height = 4320
+    frame_rate = 25
+    bitrate = 90000
+
+class MobileFullHDPreviewType(VideoType):
+    name = "m_hd_1080p_screen"
+    label = "Mobile 1080P Full HD Preview"
+    extension = "mp4"
+    mime_type = "video/mp4"
+    codec = "MPEG4 H.264"
+    width = 1080
+    height = 1920
+    frame_rate = 30
+    bitrate = 12000
+
+class MobileUltraHDPreviewType(VideoType):
+    name = "m_ultra_hd_screen"
+    label = "Mobile 4K Ultra HD Preview"
+    extension = "mp4"
+    mime_type = "video/mp4"
+    codec = "MPEG4 H.264"
+    width = 2160
+    height = 3840
+    frame_rate = 30
+    bitrate = 36000
