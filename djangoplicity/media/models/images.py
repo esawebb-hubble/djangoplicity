@@ -835,6 +835,16 @@ class Image( ArchiveModel, TranslationModel, ContentDeliveryModel, CropModel ):
         portrait1080 = ImageResourceManager(derived='publicationtiff', type=types.Portrait1080Type)
         poster400y = ImageResourceManager(derived='publicationtiff', type=types.Poster400yType)
 
+        
+        wallpaper_hd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperHDType)
+        wallpaper_fhd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperFHDType)
+        wallpaper_qhd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperQHDType)
+        wallpaper_uhd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperUHDType)
+        wallpaper_mobile_fhd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperMobileFHDType)
+        wallpaper_mobile_fhd_plus = ImageResourceManager(derived='publicationtiff', type=types.WallpaperMobileFHDPlusType)
+        wallpaper_mobile_qhd_plus = ImageResourceManager(derived='publicationtiff', type=types.WallpaperMobileQHDPlusType)
+        wallpaper_mobile_uhd = ImageResourceManager(derived='publicationtiff', type=types.WallpaperMobileUHDType)
+
         pl_original = ImageResourceManager(type=types.OriginalImageType)
         pl_screen = ImageResourceManager(derived='pl_original', type=types.ScreensizeJpegType)
         pl_thumbs = ImageResourceManager(derived='pl_original', type=types.ThumbnailJpegType)

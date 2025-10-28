@@ -300,3 +300,73 @@ class Poster400yType(JpegType):
     height = 400
     unsharp = 25
     upscale = True
+
+class WallpaperHDType(JpegType):
+    verbose_name = _(u'1280x720 (HD)')
+    width = 1280
+    height = 720
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperFHDType(JpegType):
+    verbose_name = _(u'1920x1080 (FHD)')
+    width = 1920
+    height = 1080
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperQHDType(JpegType):
+    verbose_name = _(u'2560x1440 (QHD)')
+    width = 2560
+    height = 1440
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperUHDType(JpegType):
+    verbose_name = _(u'3840x2160 (UHD)')
+    width = 3840
+    height = 2160
+    compression_quality = 90
+    upscale = True
+    required = False
+
+class WallpaperMobileFHDType(JpegType):
+    verbose_name = _(u'1080x1920 (Mobile FHD)')
+    width = 1080
+    height = 1920
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperMobileFHDPlusType(JpegType):
+    verbose_name = _(u'1080x2340 (Mobile FHD+)')
+    width = 1080
+    height = 2340
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperMobileQHDPlusType(JpegType):
+    verbose_name = _(u'1440x3200 (Mobile QHD+)')
+    width = 1440
+    height = 3200
+    compression_quality = 90
+    upscale = True
+    required = False
+
+
+class WallpaperMobileUHDType(JpegType):
+    verbose_name = _(u'2160x3840 (Mobile UHD)')
+    width = 2160
+    height = 3840
+    compression_quality = 90
+    upscale = True
+    required = False
