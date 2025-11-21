@@ -327,7 +327,7 @@ class Video( ArchiveModel, TranslationModel, ContentDeliveryModel ):
         qhd_1440p25_screen = ResourceManager(type=types.QHDPreviewType, verbose_name=_(u"2.5K QHD Preview 1440p/25 H.264"))
 
         # 8K Preview
-        k8_4320p25_screen = ResourceManager(type=types.K8PreviewType, verbose_name=_(u"8K Preview 4320p/25 H.264"))
+        eightk_4320p25_screen = ResourceManager(type=types.eightKPreviewType, verbose_name=_(u"8K Preview 4320p/25 H.264"))
 
         # Mobile 1080P Full HD Preview
         m_hd_1080p_screen = ResourceManager(type=types.MobileFullHDPreviewType, verbose_name=_(u"Mobile 1080P Full HD Preview"))

@@ -215,9 +215,10 @@ class QHDPreviewType(FileType):
     frame_rate = 25
     bitrate = 14000
 
-class K8PreviewType(FileType):
+class eightKPreviewType(FileType):
     name = "8k_4320p25_screen"
     label = "8K Preview"
+    directory="8k_4320p25_screen"
     extension = "mp4"
     mime_type = "video/mp4"
     codec = "MPEG4 H.264"
