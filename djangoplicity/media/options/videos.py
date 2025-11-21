@@ -292,7 +292,7 @@ class VideoOptions( ArchiveOptions ):
             ( 'small_qt', ( '.mov', ) ),
             # QHD / 8K / Mobile formats
             ('qhd_1440p25_screen', ('.mp4',)),
-            ('8k_4320p25_screen', ('.mp4',)),
+            ('eightk_4320p25_screen', ('.mp4',)),
             ('m_hd_1080p_screen', ('.mp4',)),
             ('m_ultra_hd_screen', ('.mp4',)),
             # Other
@@ -345,7 +345,7 @@ class VideoOptions( ArchiveOptions ):
                 'hd_broadcast_720p50_part9',
                 'hd_broadcast_720p50_part10',
                 'qhd_1440p25_screen',
-                '8k_4320p25_screen',
+                'eightk_4320p25_screen',
                 'm_hd_1080p_screen',
                 'm_ultra_hd_screen',
             ] + getattr( settings, 'VIDEOS_FORMATS_REMOVE', [] ) ),
