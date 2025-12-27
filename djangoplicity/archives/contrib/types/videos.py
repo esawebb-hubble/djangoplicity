@@ -204,7 +204,7 @@ class AudioTrackType (FileType):
     verbose_name = ugettext_noop(u'Audio Track')
     exts = ['zip', 'wav']
 
-class QHDPreviewType(FileType):
+class QHDPreviewType(MP4Type):
     name = "qhd_1440p25_screen"
     label = "2.5K QHD Preview"
     extension = "mp4"
@@ -215,10 +215,9 @@ class QHDPreviewType(FileType):
     frame_rate = 25
     bitrate = 14000
 
-class eightKPreviewType(FileType):
-    name = "8k_4320p25_screen"
+class eightKPreviewType(MP4Type):
+    name = "eightk_4320p25_screen"
     label = "8K Preview"
-    directory="8k_4320p25_screen"
     extension = "mp4"
     mime_type = "video/mp4"
     codec = "MPEG4 H.264"
@@ -227,7 +226,7 @@ class eightKPreviewType(FileType):
     frame_rate = 25
     bitrate = 90000
 
-class MobileFullHDPreviewType(FileType):
+class MobileFullHDPreviewType(MP4Type):
     name = "m_hd_1080p_screen"
     label = "Mobile 1080P Full HD Preview"
     extension = "mp4"
@@ -238,7 +237,7 @@ class MobileFullHDPreviewType(FileType):
     frame_rate = 30
     bitrate = 12000
 
-class MobileUltraHDPreviewType(FileType):
+class MobileUltraHDPreviewType(MP4Type):
     name = "m_ultra_hd_screen"
     label = "Mobile 4K Ultra HD Preview"
     extension = "mp4"
