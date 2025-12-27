@@ -193,6 +193,22 @@ class VideoOptions( ArchiveOptions ):
             'resources': (video_giphy_url_link, ),
             'icons': {'video_giphy_url_link': 'giphy'}
         }),
+
+        (ugettext_noop(u'QHD'), {
+            'resources': ('qhd_1440p25_screen', ),
+            'icons': {'qhd_1440p25_screen': 'movie'}
+        }),
+
+        (ugettext_noop(u'8k'), {
+            'resources': ('eightk_4320p25_screen', ),
+            'icons': {'eightk_4320p25_screen': 'movie'}
+        }),
+
+        (ugettext_noop(u'Mobile'), {
+            'resources': ('m_ultra_hd_screen', 'm_hd_1080p_screen' ),
+            'icons': {'m_ultra_hd_screen': 'movie', 'm_hd_1080p_screen': 'movie'}
+        }),
+
     )
 
     detail_views = (
