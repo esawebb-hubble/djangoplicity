@@ -91,11 +91,11 @@ class Video( ArchiveModel, TranslationModel, ContentDeliveryModel ):
             self.credit = DEFAULT_CREDIT
 
     UPLOAD_FORMATS = (
-        'vr_8k', 'vr_4k', 'cylindrical_preview', 'ultra_hd',
+        'vr_8k', 'vr_4k', 'cylindrical_preview','eightk_4320p25_screen', 'ultra_hd',
         'hd_1080p25_screen', 'hd_1080_screen', 'dome_preview', 'hd_broadcast_720p25',
         'hd_and_apple', 'medium_podcast', 'ext_highres', 'ext_playback',
         'old_video', 'vr_16kmaster', 'vr_8kmaster', 'vr_4kmaster', 'qhd_1440p25_screen',
-        '8k_4320p25_screen', 'm_hd_1080p_screen', 'm_ultra_hd_screen',
+        'm_hd_1080p_screen', 'm_ultra_hd_screen',
     )
 
     priority = archive_fields.PriorityField( help_text=_( u'Assessment of the quality of the image (100 highest, 0 lowest). Higher priority images are ranked higher in search results than lower priority images.' ) )
@@ -327,7 +327,7 @@ class Video( ArchiveModel, TranslationModel, ContentDeliveryModel ):
         qhd_1440p25_screen = ResourceManager(type=types.QHDPreviewType, verbose_name=_(u"2.5K QHD Preview 1440p/25 H.264"))
 
         # 8K Preview
-        eightk_4320p25_screen = ResourceManager(type=types.eightKPreviewType, verbose_name=_(u"8K Preview 4320p/25 H.264"))
+        eightk_4320p25_screen = ResourceManager(type=types.eightKPreviewType, verbose_name=_(u"8K Preview 4320p/25 H.265"))
 
         # Mobile 1080P Full HD Preview
         m_hd_1080p_screen = ResourceManager(type=types.MobileFullHDPreviewType, verbose_name=_(u"Mobile 1080P Full HD Preview"))
