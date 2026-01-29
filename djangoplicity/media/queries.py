@@ -138,3 +138,12 @@ class PotwAllPublicQuery(AllPublicQuery):
         (qs, query_data) = super(PotwAllPublicQuery, self).queryset(model, options, request, **kwargs)
         qs = qs.select_related('image', 'image__source')
         return (qs, query_data)
+    
+class PotmAllPublicQuery(AllPublicQuery):
+    '''
+    Query to prefetch the related potms
+    '''
+    def queryset(self, model, options, request, **kwargs):
+        (qs, query_data) = super(PotmAllPublicQuery, self).queryset(model, options, request, **kwargs)
+        qs = qs.select_related('image', 'image__source')
+        return (qs, query_data)

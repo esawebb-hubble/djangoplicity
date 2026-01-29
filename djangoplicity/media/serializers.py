@@ -337,3 +337,63 @@ class MiniImageSerializer( SimpleSerializer ):
 
     def get_release_date_value( self, obj ):
         return self.append_timezone( obj.release_date )
+
+class PictureOfTheMonthSerializer( SimpleSerializer ):
+    fields = (
+        'id',
+        'release_date',
+        'title',
+        'description',
+        'image',
+        'lang',
+    )
+
+    def get_title_value( self, obj ):
+        try:
+            return obj.visual().title
+        except Exception:
+            return ""
+
+    def get_description_value( self, obj ):
+        try:
+            return obj.visual().description
+        except Exception:
+            return ""
+
+    def get_image_value( self, obj ):
+        if obj.image:
+            return obj.image.id
+        else:
+            return None
+
+    def serialize(self, obj):
+        data = super(PictureOfTheMonthSerializer, self).serialize(obj).data
+        archive = obj.image or None
+        if archive:
+            data.update({'formats_url': get_instance_archives_urls(archive)})
+
+        return Serialization( data )
+
+class ICalPictureOfTheMonthSerializer( SimpleSerializer ):
+    fields = (
+        'summary',
+        'description',
+        'dtstart',
+        'dtend',
+        'dtstamp',
+    )
+
+    def get_summary_value( self, obj ):
+        return "ESO Picture Of The Month %s - %s" % ( obj.id, obj.visual().title )
+
+    def get_description_value( self, obj ):
+        return obj.visual().description
+
+    def get_dtstart_value( self, obj ):
+        return obj.release_date
+
+    def get_dtend_value( self, obj ):
+        return obj.release_date
+
+    def get_dtstamp_value( self, obj ):
+        return obj.release_date

@@ -50,7 +50,8 @@ from djangoplicity.media.consts import IMAGE_AVM_FORMATS
 from djangoplicity.media.models import ImageExposure, ImageContact, Image, \
         VideoContact, Video, VideoSubtitle, ImageColor, Color, PictureOfTheWeek, \
         ImageComparison, ImageProxy, ImageComparisonProxy, PictureOfTheWeekProxy, \
-        VideoProxy, VideoAudioTrack, VideoBroadcastAudioTrack, VideoScript
+        VideoProxy, VideoAudioTrack, VideoBroadcastAudioTrack, VideoScript, \
+        PictureOfTheMonth, PictureOfTheMonthProxy
 from djangoplicity.metadata.models import Category, TaggingStatus
 from djangoplicity.releases.admin import releaseinlineadmin
 
@@ -639,6 +640,99 @@ class PictureOfTheWeekProxyAdmin( dpadmin.DjangoplicityModelAdmin, RenameAdmin, 
 
 PictureOfTheWeekAdmin.inlines += [PictureOfTheWeekProxyInlineAdmin]
 
+# ============================================
+# Picture of the Month admin
+# ============================================
+#hack: Injecting Release Options into DisplaysAdmin
+class POTMDisplaysAdmin( DisplaysAdmin ):
+    from djangoplicity.media.options import PictureOfTheMonthOptions
+    options = PictureOfTheMonthOptions
+
+
+class PictureOfTheMonthAdmin( dpadmin.DjangoplicityModelAdmin, POTMDisplaysAdmin, RenameAdmin, ArchiveAdmin ):
+    list_display = ( 'id', 'potm_thumbnail', 'visual_title', 'visual_type', 'published', 'release_date', 'embargo_date' )
+    list_filter = ( 'published', 'last_modified', 'created', 'release_date', 'embargo_date', )
+    list_editable = ( 'published',)
+    search_fields = ( 'id', 'image__id', 'image__title', 'video__id', 'video__title', )
+    date_hierarchy = 'release_date'
+    fieldsets = (
+        ( None, {'fields': ( 'id', ) } ),
+        ( _(u'Language'), {'fields': ( 'lang', ) } ),
+        ( 'Publishing', {'fields': ( 'published', ('release_date', 'embargo_date'), ), } ),
+        ( 'Picture of the Month', {'fields': ( 'image', 'comparison' ), } ),  # Video is on purpose omitted here, as e.g. newsletter does not have support for displaying POTW which are videos
+    )
+    ordering = ('-release_date', '-id', )
+    raw_id_fields = ('image', 'comparison')
+    actions = ['action_mutiple_item_displays', 'action_toggle_published']
+    inlines = []  # Do not remove - will cause (PictureOfTheMonthProxyInlineAdmin to be embedded in all admin classes).
+    list_select_related = ['image', 'video', 'comparison']
+
+    def visual_title( self, obj ):
+        v = obj.visual()
+        return str( v ) if v else ""
+    visual_title.short_description = _(u'Title')
+
+    def visual_type( self, obj ):
+        if obj.image:
+            return _("Image")
+        elif obj.video:
+            return _("Video")
+        elif obj.comparison:
+            return _("Comparison")
+        else:
+            return ""
+    visual_type.short_description = _('Type')
+
+    def potm_thumbnail( self, obj ):
+        """
+        Wrapper around list_link_thumbnail to use the main visual
+        as thumbnail instead of the POTM object itself.
+        """
+        return self.list_link_thumbnail( obj.visual() )
+    potm_thumbnail.allow_tags = True
+    potm_thumbnail.short_description = _(u'Thumbnail')
+
+    def get_queryset( self, request ):
+        qs = super( PictureOfTheMonthAdmin, self ).get_queryset( request )
+        return ArchiveAdmin.limit_access( self, request, qs )
+
+
+# ============================================
+# POTM proxy admin
+# ============================================
+class PictureOfTheMonthProxyInlineForm( ModelForm ):
+    class Meta:
+        model = PictureOfTheMonthProxy
+        fields = ( 'id', 'published', 'translation_ready', 'lang', )
+
+
+class PictureOfTheMonthProxyInlineAdmin( admin.TabularInline ):
+    model = PictureOfTheMonthProxy
+    extra = 0
+    max_num = 0
+    form = PictureOfTheMonthProxyInlineForm
+    readonly_fields = ( 'published', 'translation_ready', 'lang', )
+
+
+class PictureOfTheMonthProxyAdmin( dpadmin.DjangoplicityModelAdmin, RenameAdmin, TranslationDuplicateAdmin, ArchiveAdmin ):
+    list_display = ( 'id', 'published', 'translation_ready', 'lang', 'source', 'last_modified' )
+    list_filter = ( 'lang', 'published', 'last_modified', 'created', 'release_date', 'embargo_date', )
+    search_fields = PictureOfTheMonthAdmin.search_fields
+    fieldsets = (
+                    ( 'Language', {'fields': ( 'lang', 'source', 'translation_ready', ) } ),
+                    ( None, {'fields': ( 'id', ) } ),
+                    ( 'Publishing', {'fields': ( 'published', 'release_date', 'embargo_date' ), } ),
+                )
+    ordering = PictureOfTheMonthAdmin.ordering
+    raw_id_fields = ( 'source', 'image', 'video')
+    readonly_fields = ( 'id', 'published', 'release_date', 'embargo_date', 'image', 'video' )
+    list_select_related = ['image', 'video', 'comparison', 'source']
+    inlines = []
+
+
+PictureOfTheMonthAdmin.inlines += [PictureOfTheMonthProxyInlineAdmin]
+
+
 
 # ============================================
 # Image comparison admin
@@ -724,6 +818,7 @@ def register_with_admin( admin_site ):
         admin_site.register( ImageProxy, ImageProxyAdmin )
         admin_site.register( VideoProxy, VideoProxyAdmin )
         admin_site.register( PictureOfTheWeekProxy, PictureOfTheWeekProxyAdmin )
+        admin_site.register( PictureOfTheMonthProxy, PictureOfTheMonthProxyAdmin )
         admin_site.register( ImageComparisonProxy, ImageComparisonProxyAdmin )
     admin_site.register( Video, VideoAdmin )
     admin_site.register( VideoSubtitle, VideoSubtitleAdmin )
@@ -733,6 +828,7 @@ def register_with_admin( admin_site ):
     admin_site.register( Color, ColorAdmin )
     admin_site.register( ImageColor, ImageColorAdmin )
     admin_site.register( PictureOfTheWeek, PictureOfTheWeekAdmin )
+    admin_site.register( PictureOfTheMonth, PictureOfTheMonthAdmin )
     admin_site.register( ImageComparison, ImageComparisonAdmin )
 
 
