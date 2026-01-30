@@ -136,5 +136,20 @@ class PotwAllPublicQuery(AllPublicQuery):
     '''
     def queryset(self, model, options, request, **kwargs):
         (qs, query_data) = super(PotwAllPublicQuery, self).queryset(model, options, request, **kwargs)
-        qs = qs.select_related('image', 'image__source')
+        qs = (
+            qs.filter(category="POTW")
+              .select_related('image', 'image__source')
+        )
         return (qs, query_data)
+
+class PotmAllPublicQuery(AllPublicQuery):
+    '''
+    Query to list Picture of the Month
+    '''
+    def queryset(self, model, options, request, **kwargs):
+        qs, query_data = super().queryset(model, options, request, **kwargs)
+        qs = (
+            qs.filter(category="POTM")
+              .select_related('image', 'image__source')
+        )
+        return qs, query_data
