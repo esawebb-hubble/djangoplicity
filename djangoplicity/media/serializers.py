@@ -212,6 +212,7 @@ class PictureOfTheWeekSerializer( SimpleSerializer ):
         'video',
         'comparison',
         'lang',
+        'category',
     )
 
     def get_title_value( self, obj ):

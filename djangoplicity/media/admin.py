@@ -557,13 +557,13 @@ class POTWDisplaysAdmin( DisplaysAdmin ):
 
 
 class PictureOfTheWeekAdmin( dpadmin.DjangoplicityModelAdmin, POTWDisplaysAdmin, RenameAdmin, ArchiveAdmin ):
-    list_display = ( 'id', 'potw_thumbnail', 'visual_title', 'visual_type', 'published', 'release_date', 'embargo_date' )
+    list_display = ( 'id', 'potw_thumbnail', 'visual_title', 'visual_type', 'category', 'published', 'release_date', 'embargo_date' )
     list_filter = ( 'published', 'last_modified', 'created', 'release_date', 'embargo_date', )
     list_editable = ( 'published',)
     search_fields = ( 'id', 'image__id', 'image__title', 'video__id', 'video__title', )
     date_hierarchy = 'release_date'
     fieldsets = (
-        ( None, {'fields': ( 'id', ) } ),
+        ( None, {'fields': ( 'id', 'category', ) } ),
         ( _(u'Language'), {'fields': ( 'lang', ) } ),
         ( 'Publishing', {'fields': ( 'published', ('release_date', 'embargo_date'), ), } ),
         ( 'Picture of the Week', {'fields': ( 'image', 'comparison' ), } ),  # Video is on purpose omitted here, as e.g. newsletter does not have support for displaying POTW which are videos
