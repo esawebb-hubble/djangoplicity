@@ -55,6 +55,10 @@ from djangoplicity.translation.models import TranslationForeignKey,TranslationMo
 #
 # This was we can easily get all POTWs for a given language
 
+CATEGORY_CHOICES = [
+        ("POTW", "Picture of the Week"),
+        ("POTM", "Picture of the Month"),
+    ]
 
 @python_2_unicode_compatible
 class PictureOfTheWeek( ArchiveModel, TranslationModel ):
@@ -64,6 +68,13 @@ class PictureOfTheWeek( ArchiveModel, TranslationModel ):
     set will be propagate to the image/video model.
     """
     id = archive_fields.IdField()
+    category = models.CharField(
+        max_length=4,
+        choices=CATEGORY_CHOICES,
+        default="POTW",
+        verbose_name=_('Category'),
+        help_text=_('Category: Picture of the Week or Month'),
+    )
     image = TranslationForeignKey( Image, blank=True, null=True, only_sources=False, on_delete=models.CASCADE )
     video = TranslationForeignKey( Video, blank=True, null=True, only_sources=False, on_delete=models.CASCADE )
     comparison = models.ForeignKey( ImageComparison, blank=True, null=True, on_delete=models.CASCADE )

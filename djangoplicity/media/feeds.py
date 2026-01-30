@@ -39,7 +39,7 @@ from djangoplicity.feeds import conf as feedsconf
 from djangoplicity.feeds.feeds import DjangoplicityFeedGen
 from djangoplicity.media.models import Image, Video, PictureOfTheWeek
 from djangoplicity.media.options import ImageOptions, VideoOptions, \
-    PictureOfTheWeekOptions
+    PictureOfTheWeekOptions, PictureOfTheMonthOptions
 from djangoplicity.utils.datetimes import timestring_to_seconds
 
 
@@ -252,6 +252,100 @@ class PictureOfTheWeekFeed( DjangoplicityArchiveFeed ):
                 return None
 
     def item_enclosure_mime_type( self, item ):
+        if item.image:
+            return 'image/jpeg'
+        elif item.video:
+            return 'video/x-m4v'
+
+class PictureOfTheMonthFeed(DjangoplicityArchiveFeed):
+    title = feedsconf.get(
+        'PictureOfTheMonthFeedSettings',
+        'title',
+        'Picture of The Month'
+    )
+    link = feedsconf.get(
+        'PictureOfTheMonthFeedSettings',
+        'link',
+        '/'
+    )
+    description = feedsconf.get(
+        'PictureOfTheMonthFeedSettings',
+        'description',
+        'Picture of The Month Feed'
+    )
+
+    title_template = 'feeds/potm_title.html'
+    description_template = 'feeds/potm_description.html'
+
+    class Meta(DjangoplicityArchiveFeed.Meta):
+        model = PictureOfTheWeek
+        options = PictureOfTheMonthOptions
+        latest_fieldname = PictureOfTheWeek.Archive.Meta.release_date_fieldname
+        enclosure_resources = {'': 'resource_hd_and_apple'}
+        enclosure_mimetype = 'video/x-m4v'
+        default_query = PictureOfTheMonthOptions.Queries.default
+        category_query = None
+        items_to_display = 25
+        external_feed_url = feedsconf.get(
+            'PictureOfTheMonthFeedSettings',
+            'external_feed_url',
+            None
+        )
+
+    def item_title(self, item):
+        if item.image:
+            return item.image.title
+        elif item.video:
+            return item.video.title
+        return None
+
+    def item_pubdate(self, item):
+        return item.release_date
+
+    def item_enclosure_url(self, item):
+        if item.image:
+            im = item.image
+            if im.resource_screen:
+                return im.resource_screen.absolute_url
+            return None
+
+        if item.comparison:
+            im = item.comparison
+            if im.resource_screen:
+                return "https://%s%s" % (
+                    Site.objects.get_current().domain,
+                    im.resource_screen.url
+                )
+            return None
+
+        if item.video:
+            vi = item.video
+            if vi.resource_hd_and_apple:
+                return "https://%s%s" % (
+                    Site.objects.get_current().domain,
+                    vi.resource_hd_and_apple.url
+                )
+            elif vi.resource_hd720p_screen:
+                return "https://%s%s" % (
+                    Site.objects.get_current().domain,
+                    vi.resource_hd720p_screen.url
+                )
+            return None
+
+    def item_enclosure_length(self, item):
+        if item.image:
+            im = item.image
+            if im.resource_screen:
+                return int(im.resource_screen.size)
+            return None
+
+        if item.video:
+            vi = item.video
+            if vi.resource_hd_and_apple:
+                return int(vi.resource_hd_and_apple.size)
+            return None
+
+    def item_enclosure_mime_type(self, item):
         if item.image:
             return 'image/jpeg'
         elif item.video:
