@@ -45,7 +45,7 @@ from djangoplicity.archives.contrib.search.fields import VideoSizeSearchField, \
     PrioritySearchField, SeparatorField, IdSearchField, RelatedIdSearchField, \
     DateSinceSearchField, DateUntilSearchField, TextSearchField, \
     AVMSubjectNameSearchField, AVMTypeSearchField, \
-    AVMSubjectCategorySearchField
+    CategorySearchField
 from djangoplicity.archives.importer.import_actions import move_resources, \
     process_image_derivatives, remove_old_resources, rename_resource_ext, \
     compute_archive_checksums
@@ -250,7 +250,7 @@ class VideoOptions( ArchiveOptions ):
         description = TextSearchField( label=_( "Description" ), model_field='description' )
         credit = TextSearchField( label=_( "Credit" ), model_field='credit' )
         type = AVMTypeSearchField( label=_( "Type" ), )
-        category = AVMSubjectCategorySearchField( label=_( "Category" ), )
+        category = CategorySearchField( label=_( "Category" ), )
 
         class Meta:
             verbose_name = ugettext_noop("Advanced Video Search")
