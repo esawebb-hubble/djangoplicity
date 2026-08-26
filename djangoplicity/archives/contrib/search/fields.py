@@ -383,6 +383,18 @@ class AVMSubjectCategorySearchField( MultiSearchField, fields.MultipleChoiceFiel
 
     choices = property(_get_choices, fields.ChoiceField._set_choices)
 
+class CategorySearchField(MultiSearchField, fields.MultipleChoiceField):
+    model_field = 'categories__id'
+    operator = 'exact'
+    widget = widgets.SelectMultiple
+    help_text = _( 'Hold Ctrl+click (Command+click on a Mac) for multiple selection.' )
+
+    def _get_choices(self):
+        from djangoplicity.metadata.models import Category
+        return [(c.id, _(c.name)) for c in Category.objects.filter(enabled=True)]
+
+    choices = property(_get_choices, fields.ChoiceField._set_choices)
+
 
 class ManyToManySearchField( MultiSearchField, fields.MultipleChoiceField ):
     operator = 'exact'
