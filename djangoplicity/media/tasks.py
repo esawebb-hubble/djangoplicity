@@ -339,6 +339,15 @@ def write_metadata(image_id, formats, cdn_sync=True):
             logger.debug("Skipping writing AVM for PSB '%s'" % fmt)
             continue
 
+        if res.path.lower().endswith(('.tif', '.tiff')):
+            try:
+                with open(filepath, 'rb') as f_tif:
+                    tif_header = f_tif.read(4)
+                if tif_header in (b'II+\x00', b'MM\x00+'):
+                    logger.debug("Skipping writing AVM for BigTIFF '%s' to avoid library failure" % fmt)
+                    continue
+            except Exception as e:
+                logger.error("Could not read TIFF header for %s: %s" % (filepath, e))
         logger.debug("Found %s resource file '%s' for image '%s'" % (fmt, filepath, image_id))
 
         # Serialize to AVM
@@ -354,7 +363,8 @@ def write_metadata(image_id, formats, cdn_sync=True):
         # Write AVM to file
         result = avm_to_file(filepath, avm.data, replace=False)
         if not result:
-            raise Exception('There was an error while writing AVM for image %s to file %s' % (image_id, filepath))
+            logger.error('There was an error while writing AVM for image %s to file %s' % (image_id, filepath))
+            continue
         logger.info("Wrote AVM for image %s to %s" % (image_id, filepath))
 
         # Write custom EXIF Camera/Make to mark the image as a 360° pano
