@@ -59,7 +59,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: get path from settings?
 IM_PATH = '/usr/bin/'
-IM_LIMITS = '-limit memory 1GiB -limit map 1GiB -limit thread 4'
+IM_LIMITS = '-limit memory 3GiB -limit map 100GiB -limit disk 150GiB -limit thread 2'
 IM_TMP_DIR = settings.TMP_DIR
 
 CONVERT_DEFAULTS = '-quiet -colorspace sRGB +antialias'
