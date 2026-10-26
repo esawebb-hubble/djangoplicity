@@ -19,14 +19,19 @@ class WebCategoryPublicQuery(WebCategoryQuery):
     Query for public images in a certain category, which takes into account that an
     image can be bound by its release.
     """
-    def queryset( self, model, options, request, **kwargs ):
+    def queryset(self, model, options, request, **kwargs):
         now = datetime.now()
-        ( qs, query_data ) = super( WebCategoryPublicQuery, self ).queryset( model, options, request, **kwargs )
-        qs = qs.prefetch_related('pictureoftheweek_set')
-        qs = self._filter_datetime( qs, now, 'release_date', False, True )
-        qs = self._filter_datetime( qs, now, 'embargo_date', False, True )
-        qs = qs.filter( published=True )
-        return ( qs, query_data )
+        (qs, query_data) = super(WebCategoryPublicQuery, self).queryset(model, options, request, **kwargs)
+
+        qs = qs.select_related('source').prefetch_related(
+            'pictureoftheweek_set',
+            'subject_category',
+            'subject_name'
+        )
+        qs = self._filter_datetime(qs, now, 'release_date', False, True)
+        qs = self._filter_datetime(qs, now, 'embargo_date', False, True)
+        qs = qs.filter(published=True)
+        return (qs, query_data)
 
 
 class VideoWebCategoryPublicQuery(WebCategoryPublicQuery):
@@ -49,15 +54,19 @@ class WallpaperQuery( AllPublicQuery ):
         return ( qs, query_data )
 
 
-class ObservationQuery( AllPublicQuery ):
-    def queryset( self, model, options, request, **kwargs ):
+class ObservationQuery(AllPublicQuery):
+    def queryset(self, model, options, request, **kwargs):
         now = datetime.now()
-        ( qs, query_data ) = super( ObservationQuery, self ).queryset( model, options, request, **kwargs )
-        qs = qs.filter( published=True ).prefetch_related('pictureoftheweek_set')
-        qs = qs.filter( spatial_quality='Full', type='Observation' )
-        qs = self._filter_datetime( qs, now, 'release_date', False, True )
-        qs = self._filter_datetime( qs, now, 'embargo_date', False, True )
-        return ( qs, query_data )
+        (qs, query_data) = super(ObservationQuery, self).queryset(model, options, request, **kwargs)
+        qs = qs.select_related('source').prefetch_related(
+            'pictureoftheweek_set',
+            'subject_category',
+            'subject_name'
+        ).filter(published=True)
+        qs = qs.filter(spatial_quality='Full', type='Observation')
+        qs = self._filter_datetime(qs, now, 'release_date', False, True)
+        qs = self._filter_datetime(qs, now, 'embargo_date', False, True)
+        return (qs, query_data)
 
 
 class ZoomableQuery( AllPublicQuery ):
@@ -102,11 +111,17 @@ class WWTQuery( AllPublicQuery ):
 
 class ImageAllPublicQuery(AllPublicQuery):
     '''
-    Query to prefetch the related potws
+    Query to prefetch the related potws and metadata to avoid N+1
     '''
     def queryset(self, model, options, request, **kwargs):
         (qs, query_data) = super(ImageAllPublicQuery, self).queryset(model, options, request, **kwargs)
-        qs = qs.prefetch_related('pictureoftheweek_set')
+        qs = qs.select_related(
+            'source'
+        ).prefetch_related(
+            'pictureoftheweek_set',
+            'subject_category',
+            'subject_name'
+        )
         return (qs, query_data)
 
 
