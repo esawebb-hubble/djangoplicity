@@ -5,6 +5,7 @@
 #   Lars Holm Nielsen <lnielsen@eso.org>
 #   Luis Clara Gomes <lcgomes@eso.org>
 
+import hashlib
 from builtins import str
 from builtins import object
 from os.path import basename
@@ -660,10 +661,11 @@ def archive_list( request, model=None, options=None, query_name=None, query=None
         raise Http404
 
     # Check if request is internal and generate cache key
+    path_hash = hashlib.md5(request.path.encode('utf-8')).hexdigest()
     if is_internal(request):
-        key = '%s_archive_list_internal_%s' % (model.get_cache_key_prefix(), str(request.path.__hash__()))
+        key = '%s_archive_list_internal_%s' % (model.get_cache_key_prefix(), path_hash)
     else:
-        key = '%s_archive_list_external_%s' % (model.get_cache_key_prefix(), str(request.path.__hash__()))
+        key = '%s_archive_list_external_%s' % (model.get_cache_key_prefix(), path_hash)
 
     #
     # Determine archive browser
@@ -724,7 +726,7 @@ def archive_list( request, model=None, options=None, query_name=None, query=None
     if options.prefetch_related:
         qs = qs.prefetch_related(*options.prefetch_related)
 
-    if options.archive_list_only_fields:
+    if options.archive_list_only_fields and getattr(browser, 'serializer', None) is None:
         qs = qs.only(*options.archive_list_only_fields)
 
     #
