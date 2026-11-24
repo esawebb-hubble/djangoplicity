@@ -661,7 +661,7 @@ def archive_list( request, model=None, options=None, query_name=None, query=None
         raise Http404
 
     # Check if request is internal and generate cache key
-    path_hash = hashlib.md5(request.path.encode('utf-8')).hexdigest()
+    path_hash = hashlib.md5(request.get_full_path().encode('utf-8')).hexdigest()
     if is_internal(request):
         key = '%s_archive_list_internal_%s' % (model.get_cache_key_prefix(), path_hash)
     else:
@@ -703,7 +703,7 @@ def archive_list( request, model=None, options=None, query_name=None, query=None
 
     # We don't used cached view if we have GET data (to prevent
     # caching search queries)
-    if ca and not request.GET:
+    if ca:
         return browser.response( ca )
 
     #
@@ -749,8 +749,7 @@ def archive_list( request, model=None, options=None, query_name=None, query=None
     kwargs.update( { 'page': page, 'viewmode_name': viewmode_name } )  # Temp hack
     content = browser.render( request, model, options, query, query_name, qs, query_data, search_str, **kwargs )
 
-    if not request.GET:
-        model.cache_set( key, content )
+    model.cache_set(key, content)
 
     return browser.response( content )
 
